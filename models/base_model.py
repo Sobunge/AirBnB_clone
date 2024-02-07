@@ -10,7 +10,8 @@ class BaseModel:
         self.updated_at = datetime.now()
 
     def __str__(self):
-        return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
+        class_name = self.__class__.__name__
+        return "[{}] ({}) {}".format(class_name, self.id, self.__dict__)
 
     def save(self):
         self.updated_at = datetime.now()
@@ -20,9 +21,17 @@ class BaseModel:
         obj_dict['__class__'] = self.__class__.__name__
         obj_dict['created_at'] = self.created_at.isoformat()
         obj_dict['updated_at'] = self.updated_at.isoformat()
-        
+
         # Rearrange the keys in the dictionary
-        ordered_keys = ['my_number', 'name', '__class__', 'updated_at', 'id', 'created_at']
-        obj_dict_ordered = {key: obj_dict[key] for key in ordered_keys if key in obj_dict}
+        ordered_keys = [
+                'my_number', 'name', '__class__',
+                'updated_at', 'id',
+                'created_at'
+                ]
+        obj_dict_ordered = {
+                key: obj_dict[key]
+                for key in ordered_keys
+                if key in obj_dict
+        }
 
         return obj_dict_ordered
