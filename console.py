@@ -123,7 +123,7 @@ class HBNBCommand(cmd.Cmd):
             class_name = arg.split()[0]
             instances = [
                             v for k, v in objects.items()
-                                if k.startswith(class_name + ".")
+                            if k.startswith(class_name + ".")
                         ]
         else:
             instances = list(objects.values())
