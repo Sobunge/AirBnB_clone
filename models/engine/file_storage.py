@@ -8,7 +8,7 @@ import models
 from models.base_model import BaseModel
 from hashlib import md5
 
-classes = {"BaseModel" : BaseModel}
+classes = {"BaseModel": BaseModel}
 
 
 class FileStorage:
@@ -52,7 +52,11 @@ class FileStorage:
                 jo = json.load(f)
             for key in jo:
                 self.__objects[key] = classes[jo[key]["__class__"]](**jo[key])
-        except:
+        except FileNotFoundError:
+            # Handle the case where the file does not exist
+            pass
+        except json.JSONDecodeError:
+            # Handle the case where there is an issue decoding JSON data
             pass
 
     def delete(self, obj=None):
