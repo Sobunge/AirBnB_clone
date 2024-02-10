@@ -197,6 +197,5 @@ class HBNBCommand(cmd.Cmd):
         print(count)
 
 
-if __name__ == "__main__":
-    prompt = HBNBCommand()
-    prompt.cmdloop()
+if __name__ == '__main__':
+    HBNBCommand().cmdloop()
