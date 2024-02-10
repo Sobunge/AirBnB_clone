@@ -47,35 +47,10 @@ class BaseModel:
             self.created_at = datetime.utcnow()
             self.updated_at = self.created_at
 
-        def __str__(self):
-            """String representation of the BaseModel class"""
-            created_at_str = self.created_at.strftime("%Y-%m-%d %H:%M:%S.%f")
-            updated_at_str = self.updated_at.strftime("%Y-%m-%d %H:%M:%S.%f")
-            return "[{}] ({}) {}".format(
-                self.__class__.__name__,
-                self.id,
-                {
-                    'id': self.id,
-                    'created_at': created_at_str,
-                    'updated_at': updated_at_str,
-                    'name': getattr(self, 'name', None),
-                    'my_number': getattr(self, 'my_number', None)
-                }
-            )
-
-    def __repr__(self):
-        """Return the string representation of the BaseModel object."""
-        return "[{}] ({}) {}".format(
-            type(self).__name__,
-            self.id,
-            {
-                'my_number': getattr(self, 'my_number', None),
-                'name': getattr(self, 'name', None),
-                'updated_at': self.updated_at,
-                'id': self.id,
-                'created_at': self.created_at,
-            }
-        )
+    def __str__(self):
+        """String representation of the BaseModel class"""
+        return "[{:s}] ({:s}) {}".format(self.__class__.__name__, self.id,
+                                         self.__dict__)
 
     def save(self):
         """updates the attribute 'updated_at' with the current datetime"""
@@ -85,18 +60,17 @@ class BaseModel:
 
     def to_dict(self, save_fs=None):
         """returns a dictionary containing all keys/values of the instance"""
-        new_dict = {
-            'my_number': getattr(self, 'my_number', None),
-            'name': getattr(self, 'name', None),
-            '__class__': self.__class__.__name__,
-            'updated_at': self.updated_at.isoformat(),
-            'id': self.id,
-            'created_at': self.created_at.isoformat()
-        }
-
-        if save_fs is None and hasattr(self, 'password'):
-            del new_dict["password"]
-
+        new_dict = self.__dict__.copy()
+        if "created_at" in new_dict:
+            new_dict["created_at"] = new_dict["created_at"].strftime(time)
+        if "updated_at" in new_dict:
+            new_dict["updated_at"] = new_dict["updated_at"].strftime(time)
+        new_dict["__class__"] = self.__class__.__name__
+        if "_sa_instance_state" in new_dict:
+            del new_dict["_sa_instance_state"]
+        if save_fs is None:
+            if "password" in new_dict:
+                del new_dict["password"]
         return new_dict
 
     def delete(self):
