@@ -6,9 +6,8 @@ Contains the FileStorage class
 import json
 import models
 from models.base_model import BaseModel
-from hashlib import md5
 
-classes = {"BaseModel" : BaseModel}
+classes = {"BaseModel": BaseModel}
 
 
 class FileStorage:
@@ -52,8 +51,12 @@ class FileStorage:
                 jo = json.load(f)
             for key in jo:
                 self.__objects[key] = classes[jo[key]["__class__"]](**jo[key])
-        except:
-            pass
+        except FileNotFoundError:
+            print("Error: File not found.")
+        except json.JSONDecodeError:
+            print("Error: JSON decoding failed.")
+        except Exception as e:
+            print(f"An unexpected error occurred: {str(e)}")
 
     def delete(self, obj=None):
         """delete obj from __objects if it’s inside"""
