@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """ A test place module """
-from tests.test_models.test_base_model import test_basemodel
+from tests.test_base_model import test_basemodel
 from models.place import Place
 
 

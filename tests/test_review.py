@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """ Declaring a test review module"""
-from tests.test_models.test_base_model import test_basemodel
+from tests.test_base_model import test_basemodel
 from models.review import Review
 
 
