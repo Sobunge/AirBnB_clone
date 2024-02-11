@@ -1,12 +1,11 @@
-#!/usr/bin/python3
-""" Console Class """
+#!/usr/bin/env python3
+
 import cmd
+import shlex
 import json
 from models.base_model import BaseModel
 
-
 class HBNBCommand(cmd.Cmd):
-    """ Declaring a HBNBCommand """
     prompt = "(hbnb) "
 
     def do_quit(self, arg):
@@ -27,7 +26,7 @@ class HBNBCommand(cmd.Cmd):
         if not arg:
             print("** class name missing **")
             return
-
+        
         try:
             new_instance = eval(arg)()
             new_instance.save()
@@ -121,10 +120,7 @@ class HBNBCommand(cmd.Cmd):
 
         if arg:
             class_name = arg.split()[0]
-            instances = [
-                            v for k, v in objects.items()
-                            if k.startswith(class_name + ".")
-                        ]
+            instances = [v for k, v in objects.items() if k.startswith(class_name + ".")]
         else:
             instances = list(objects.values())
 
@@ -185,6 +181,7 @@ class HBNBCommand(cmd.Cmd):
         with open("file.json", "w") as file:
             json.dump(objects, file)
 
+
     def do_count(self, arg):
         """Counts the number of instances of a class"""
         if not arg:
@@ -198,6 +195,7 @@ class HBNBCommand(cmd.Cmd):
                 count += 1
         print(count)
 
+if __name__ == "__main__":
+    prompt = HBNBCommand()
+    prompt.cmdloop()
 
-if __name__ == '__main__':
-    HBNBCommand().cmdloop()

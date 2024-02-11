@@ -5,16 +5,10 @@ Contains the FileStorage class
 
 import json
 import models
-from models.amenity import Amenity
 from models.base_model import BaseModel
-from models.city import City
-from models.place import Place
-from models.review import Review
-from models.state import State
-from models.user import User
+from hashlib import md5
 
-classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
-           "Place": Place, "Review": Review, "State": State, "User": User}
+classes = {"BaseModel" : BaseModel}
 
 
 class FileStorage:
@@ -58,14 +52,8 @@ class FileStorage:
                 jo = json.load(f)
             for key in jo:
                 self.__objects[key] = classes[jo[key]["__class__"]](**jo[key])
-        except FileNotFoundError:
-            # Handle the case where the JSON file doesn't exist
-            print("Error: JSON file not found.")
-        except json.JSONDecodeError:
-            # Handle the case where the JSON file is invalid
-            print("Error: Invalid JSON format.")
-        except Exception as e:
-            print(f"An error occurred: {str(e)}")
+        except:
+            pass
 
     def delete(self, obj=None):
         """delete obj from __objects if it’s inside"""
