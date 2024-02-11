@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """ Adding console module documentation """
 import cmd
 import json
