@@ -1,12 +1,12 @@
 #!/usr/bin/python3
-
+""" Console Class """
 import cmd
-import shlex
 import json
 from models.base_model import BaseModel
 
 
 class HBNBCommand(cmd.Cmd):
+    """ Declaring a HBNBCommand """
     prompt = "(hbnb) "
 
     def do_quit(self, arg):
