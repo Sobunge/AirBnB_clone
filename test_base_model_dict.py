@@ -16,6 +16,7 @@ for key in my_model_json.keys():
                                    type(my_model_json[key]),
                                    my_model_json[key]))
 
+
 print("--")
 my_new_model = BaseModel(**my_model_json)
 print(my_new_model.id)
