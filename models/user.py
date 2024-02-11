@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+""" Declaring User class """
 from models.base_model import BaseModel
 
 
