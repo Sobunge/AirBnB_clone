@@ -35,12 +35,3 @@ class User(BaseModel, Base):
         if name == "password":
             value = md5(value.encode()).hexdigest()
         super().__setattr__(name, value)
-
-    @classmethod
-    def all(cls):
-        """Retrieve all instances of User"""
-        if models.storage_t == 'db':
-            return models.storage.all(cls)
-        else:
-            # Assuming in-memory storage
-            return list(models.storage.all().values())

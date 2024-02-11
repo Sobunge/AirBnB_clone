@@ -2,6 +2,7 @@
 """ console """
 
 import cmd
+import sys
 from datetime import datetime
 import models
 from models.amenity import Amenity
@@ -162,4 +163,10 @@ class HBNBCommand(cmd.Cmd):
 
 
 if __name__ == '__main__':
-    HBNBCommand().cmdloop()
+    if len(sys.argv) > 1:
+        # Non-interactive mode
+        command = ' '.join(sys.argv[1:])
+        HBNBCommand().onecmd(command)
+    else:
+        # Interactive mode
+        HBNBCommand().cmdloop()
