@@ -109,7 +109,6 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, arg):
         """Prints string representations of instances"""
         args = shlex.split(arg)
-        obj_list = []
         if len(args) == 0:
             obj_dict = models.storage.all()
         elif args[0] in classes:
@@ -118,48 +117,128 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return False
         for key in obj_dict:
-            obj_list.append(str(obj_dict[key]))
-        print("[", end="")
-        print(", ".join(obj_list), end="")
-        print("]")
+            print(obj_dict[key])
 
-    def do_update(self, arg):
-        """Update an instance based on the class name, id, attribute & value"""
+    def default(self, line):
+        """
+        Default handler for unknown commands.
+        """
+        class_method = line.split('.')
+        if len(class_method) == 2:
+            class_name, method = class_method
+            if class_name in classes:
+                if method == 'all()':
+                    self.do_all(class_name)
+                    return
+                elif method == 'count()':
+                    self.do_count(class_name)
+                    return
+                elif method.startswith('show'):
+                    args = method.split('(')[1].rstrip(')')
+                    instance_id = args.strip()  # Extract the instance ID
+                    self.do_show(f"{class_name} {instance_id}")
+                    return
+                elif method.startswith('destroy'):
+                    args = method.split('(')[1].rstrip(')')
+                    instance_id = args.strip()  # Extract the instance ID
+                    self.do_destroy(f"{class_name} {instance_id}")
+                    return
+                elif method.startswith('update'):
+                    args = method.split('(')[1].rstrip(')')
+                    update_params = args.split(',')
+                    if len(update_params) != 3:
+                        print("Invalid update syntax")
+                        return
+                    instance_id, attribute_name,
+                    attribute_value =\
+                    [param.strip() for param in update_params]
+                    self.do_update(\
+                            f"{class_name} {instance_id}\
+                            {attribute_name} {attribute_value}")
+                    return
+                else:
+                    print("Method doesn't exist")
+            else:
+                print("Class doesn't exist")
+        else:
+            print("Invalid command syntax")
+
+    def do_count(self, arg):
+        """Count the number of instances of a class"""
         args = shlex.split(arg)
-        integers = ["number_rooms", "number_bathrooms", "max_guest",
-                    "price_by_night"]
-        floats = ["latitude", "longitude"]
         if len(args) == 0:
             print("** class name missing **")
-        elif args[0] in classes:
-            if len(args) > 1:
-                k = args[0] + "." + args[1]
-                if k in models.storage.all():
-                    if len(args) > 2:
-                        if len(args) > 3:
-                            if args[0] == "Place":
-                                if args[2] in integers:
-                                    try:
-                                        args[3] = int(args[3])
-                                    except ValueError:
-                                        args[3] = 0
-                                elif args[2] in floats:
-                                    try:
-                                        args[3] = float(args[3])
-                                    except ValueError:
-                                        args[3] = 0.0
-                            setattr(models.storage.all()[k], args[2], args[3])
-                            models.storage.all()[k].save()
-                        else:
-                            print("** value missing **")
-                    else:
-                        print("** attribute name missing **")
-                else:
-                    print("** no instance found **")
-            else:
-                print("** instance id missing **")
+            return
+        if args[0] in classes:
+            count = sum(
+                    1 for instance in models.storage.all().values()
+                    if type(instance).__name__ == args[0])
+            print(count)
         else:
             print("** class doesn't exist **")
+
+    def do_show(self, arg):
+        """Prints an instance as a string based on the class name and ID"""
+        args = shlex.split(arg)
+        if len(args) < 2:
+            print("** class name missing **")
+            return False
+        if args[0] not in classes:
+            print("** class doesn't exist **")
+            return False
+        if len(args) < 2:
+            print("** instance id missing **")
+            return False
+
+        key = args[0] + "." + args[1]
+        if key in models.storage.all():
+            print(models.storage.all()[key])
+        else:
+            print("** no instance found **")
+
+    def do_destroy(self, arg):
+        """
+        Deletes an instance based on the class name and id
+        Usage: <class name>.destroy(<id>)
+        """
+        args = shlex.split(arg)
+        if len(args) < 2:
+            print("** class name missing **")
+            return False
+        if args[0] not in classes:
+            print("** class doesn't exist **")
+            return False
+        if len(args) < 2:
+            print("** instance id missing **")
+            return False
+
+        key = args[0] + "." + args[1]
+        if key in models.storage.all():
+            del models.storage.all()[key]
+            models.storage.save()
+        else:
+            print("** no instance found **")
+            return
+
+    def do_update(self, arg):
+        """
+        Updates an instance based on its ID with a new attribute value
+        Usage: <class name> <id> <attribute name> <attribute value>
+        """
+        args = shlex.split(arg)
+        if len(args) != 4:
+            print("Invalid update syntax")
+            return
+
+        class_name, instance_id, attribute_name, attribute_value = args
+        key = "{}.{}".format(class_name, instance_id)
+        if key not in models.storage.all():
+            print("** No instance found **")
+            return
+
+        instance = models.storage.all()[key]
+        setattr(instance, attribute_name, attribute_value)
+        instance.save()
 
 
 if __name__ == '__main__':
