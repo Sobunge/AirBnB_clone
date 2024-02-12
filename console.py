@@ -150,11 +150,12 @@ class HBNBCommand(cmd.Cmd):
                         print("Invalid update syntax")
                         return
                     instance_id, attribute_name,
-                    attribute_value =\
+                    attribute_value =
                     [param.strip() for param in update_params]
-                    self.do_update(\
+                    self.do_update(
                             f"{class_name} {instance_id}\
                             {attribute_name} {attribute_value}")
+
                     return
                 else:
                     print("Method doesn't exist")
