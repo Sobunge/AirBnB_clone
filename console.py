@@ -145,7 +145,7 @@ class HBNBCommand(cmd.Cmd):
                     args = method.split('(')[1].rstrip(')')
                     update_params = args.split(',')
                     if len(update_params) != 3:
-                        print("Invalid update syntax")
+                        print("** value missing **")
                         return
                     instance_id, attribute_name,
                     attribute_value = [param.strip()
@@ -179,7 +179,7 @@ class HBNBCommand(cmd.Cmd):
     def do_show(self, arg):
         """Prints an instance as a string based on the class name and ID"""
         args = shlex.split(arg)
-        if len(args) < 2:
+        if len(args) < 1:
             print("** class name missing **")
             return False
         if args[0] not in classes:
@@ -201,7 +201,7 @@ class HBNBCommand(cmd.Cmd):
         Usage: <class name>.destroy(<id>)
         """
         args = shlex.split(arg)
-        if len(args) < 2:
+        if len(args) < 1:
             print("** class name missing **")
             return False
         if args[0] not in classes:
@@ -225,17 +225,28 @@ class HBNBCommand(cmd.Cmd):
         Usage: <class name> <id> <attribute name> <attribute value>
         """
         args = shlex.split(arg)
-        if len(args) != 4:
-            print("attribute name missing")
+        if len(args) < 1:
+            print("** class name missing **")
             return
-
-        class_name, instance_id, attribute_name, attribute_value = args
-        key = "{}.{}".format(class_name, instance_id)
-        if key not in models.storage.all():
-            print("** No instance found **")
+        class_name = args[0]
+        if class_name not in classes:
+            print("** class doesn't exist **")
             return
-
-        instance = models.storage.all()[key]
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
+        instance_id = args[1]
+        instance = self._validate_class_instance(class_name, instance_id)
+        if not instance:
+            return
+        if len(args) < 3:
+            print("** attribute name missing **")
+            return
+        attribute_name = args[2]
+        if len(args) < 4:
+            print("** value missing **")
+            return
+        attribute_value = args[3].strip('"')
         setattr(instance, attribute_name, attribute_value)
         instance.save()
 
