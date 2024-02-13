@@ -145,7 +145,7 @@ class HBNBCommand(cmd.Cmd):
                     args = method.split('(')[1].rstrip(')')
                     update_params = args.split(',')
                     if len(update_params) != 3:
-                        print("** attribute name missing **")i
+                        print("** attribute name missing **")
                         return
                     instance_id, attribute_name,
                     attribute_value = [param.strip()
