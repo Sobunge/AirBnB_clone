@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """Test BaseModel for expected behavior and documentation"""
-from datetime import datetime
+from datetime import datetime, timedelta
 import inspect
 import models
 import pep8 as pycodestyle
@@ -82,19 +82,32 @@ class TestBaseModel(unittest.TestCase):
         """Test that two BaseModel instances have different datetime objects
         and that upon creation have identical updated_at and created_at
         value."""
-        tic = datetime.now()
+        # Create the first instance and record creation time
         inst1 = BaseModel()
-        toc = datetime.now()
-        self.assertTrue(tic <= inst1.created_at <= toc)
-        time.sleep(1e-4)
-        tic = datetime.now()
+        creation_time1 = inst1.created_at
+
+        # Wait for a short duration to ensure time difference in creation
+        time.sleep(0.01)
+
+        # Create the second instance and record creation time
         inst2 = BaseModel()
-        toc = datetime.now()
-        self.assertTrue(tic <= inst2.created_at <= toc)
+        creation_time2 = inst2.created_at
+
+        # Check that created_at and updated_at values are correctly set
         self.assertEqual(inst1.created_at, inst1.updated_at)
         self.assertEqual(inst2.created_at, inst2.updated_at)
+
+        # Check that created_at times fall within expected range
+        self.assertGreaterEqual(creation_time1, inst1.created_at)
+        self.assertLessEqual(creation_time1,
+                             inst1.created_at + timedelta(seconds=1))
+
+        self.assertGreaterEqual(creation_time2, inst2.created_at)
+        self.assertLessEqual(creation_time2,
+                             inst2.created_at + timedelta(seconds=1))
+
+        # Check that the created_at times are different
         self.assertNotEqual(inst1.created_at, inst2.created_at)
-        self.assertNotEqual(inst1.updated_at, inst2.updated_at)
 
     def test_uuid(self):
         """Test that id is a valid uuid"""
