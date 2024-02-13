@@ -162,6 +162,18 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("Invalid command syntax")
 
+    def _validate_class_instance(self, class_name, instance_id):
+        """Validates class name and instance ID"""
+        if class_name not in classes:
+            print("** class doesn't exist **")
+            return None
+        key = f"{class_name}.{instance_id}"
+        instance = models.storage.all().get(key)
+        if not instance:
+            print("** no instance found **")
+            return None
+        return instance
+
     def do_count(self, arg):
         """Count the number of instances of a class"""
         args = shlex.split(arg)
@@ -249,7 +261,3 @@ class HBNBCommand(cmd.Cmd):
         attribute_value = args[3].strip('"')
         setattr(instance, attribute_name, attribute_value)
         instance.save()
-
-
-if __name__ == '__main__':
-    HBNBCommand().cmdloop()
