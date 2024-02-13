@@ -226,7 +226,7 @@ class HBNBCommand(cmd.Cmd):
         """
         args = shlex.split(arg)
         if len(args) != 4:
-            print("** attribute name missing **")
+            print("** class name missing **")
             return
 
         class_name, instance_id, attribute_name, attribute_value = args
