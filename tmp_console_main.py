@@ -179,7 +179,7 @@ class HBNBCommand(cmd.Cmd):
     def do_show(self, arg):
         """Prints an instance as a string based on the class name and ID"""
         args = shlex.split(arg)
-        if len(args) < 1:
+        if len(args) < 2:
             print("** class name missing **")
             return False
         if args[0] not in classes:
