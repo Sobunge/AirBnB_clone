@@ -145,7 +145,7 @@ class HBNBCommand(cmd.Cmd):
                     args = method.split('(')[1].rstrip(')')
                     update_params = args.split(',')
                     if len(update_params) != 3:
-                        print("Invalid update syntax")
+                        print("** attribute name missing **")i
                         return
                     instance_id, attribute_name,
                     attribute_value = [param.strip()
@@ -179,7 +179,7 @@ class HBNBCommand(cmd.Cmd):
     def do_show(self, arg):
         """Prints an instance as a string based on the class name and ID"""
         args = shlex.split(arg)
-        if len(args) < 2:
+        if len(args) < 1:
             print("** class name missing **")
             return False
         if args[0] not in classes:
@@ -201,7 +201,7 @@ class HBNBCommand(cmd.Cmd):
         Usage: <class name>.destroy(<id>)
         """
         args = shlex.split(arg)
-        if len(args) < 2:
+        if len(args) < 1:
             print("** class name missing **")
             return False
         if args[0] not in classes:
@@ -232,7 +232,7 @@ class HBNBCommand(cmd.Cmd):
         class_name, instance_id, attribute_name, attribute_value = args
         key = "{}.{}".format(class_name, instance_id)
         if key not in models.storage.all():
-            print("** No instance found **")
+            print("** no instance found **")
             return
 
         instance = models.storage.all()[key]

@@ -78,11 +78,11 @@ if result is None or result == "":
     
 model_id = result
 
-result = exec_command(my_console, "update BaseModel {}".format(model_id))
+result = exec_command(my_console, "update BaseModel 1{}1 test_name \"test_value\"".format(model_id))
 if result is None or result == "":
     print("FAIL: no output")
     
-search_str = "** attribute name missing **"
+search_str = "** no instance found **"
 if result != search_str:
     print("FAIL: wrong message: \"{}\" instead of \"{}\"".format(result, search_str))
     
