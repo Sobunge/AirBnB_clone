@@ -147,9 +147,9 @@ class HBNBCommand(cmd.Cmd):
                     if len(update_params) != 3:
                         print("** value missing **")
                         return
-                    instance_id, attribute_name,
-                    attribute_value = [param.strip()
-                                       for param in update_params]
+                    instance_id, attribute_name, \
+                        attribute_value = [param.strip()
+                                           for param in update_params]
                     self.do_update(
                             f"{class_name} {instance_id}\
                             {attribute_name} {attribute_value}")
@@ -247,16 +247,16 @@ class HBNBCommand(cmd.Cmd):
         if len(args) < 2:
             print("** instance id missing **")
             return
-        instance_id = args[1]
-        instance = self._validate_class_instance(class_name, instance_id)
-        if not instance:
-            return
         if len(args) < 3:
             print("** attribute name missing **")
             return
         attribute_name = args[2]
         if len(args) < 4:
             print("** value missing **")
+            return
+        instance_id = args[1]
+        instance = self._validate_class_instance(class_name, instance_id)
+        if not instance:
             return
         attribute_value = args[3].strip('"')
         setattr(instance, attribute_name, attribute_value)
